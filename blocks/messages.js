@@ -5,7 +5,29 @@ export function tacoReceivedMessage(sender, tacoCount, messageText) {
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": `${text} \n\n <@${sender}> just gave you ${tacoCount === 1 ? "a taco" : `${tacoCount} tacos`}`
+                "text": `<@${sender}> just gave you ${tacoCount === 1 ? "a taco!" : `${tacoCount} tacos!`} :taco:`
+            }
+        },
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": messageText.split("\n").map((line) => `>${line}`).join("\n")
+            }
+        }
+    ];
+
+    return { text, blocks };
+};
+
+export function tacoReceivedReactionMessage(sender, messageText) {
+    const text = "You got a taco! :taco:";
+    const blocks = [
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": `<@${sender}> just gave you a taco reaction! :taco:`
             }
         },
         {

@@ -143,6 +143,7 @@ app.message(/<@|<!subteam\^/, async ({ message }) => {
         allowedTacoCount,
         forbiddenTacoCount,
         message.text,
+        false,
       );
     }
   } catch (error) {
@@ -212,6 +213,7 @@ app.event('reaction_added', async ({ event }) => {
         allowedTacoCount,
         forbiddenTacoCount,
         message.text,
+        true,
       );
     }
   } catch (error) {
@@ -220,8 +222,6 @@ app.event('reaction_added', async ({ event }) => {
 });
 
 (async () => {
-  console.log("🐺 Pack Snacks is running!");
-
   // Fetch bot channels
   const teamId = await getTeamId(app.client);
   const botChannels = await fetchBotChannels(app.client, teamId);

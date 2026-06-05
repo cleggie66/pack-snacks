@@ -1,8 +1,8 @@
-import { tacoReceivedMessage, tacoSentMessage, tacoPartialSuccessMessage } from "../blocks/messages.js";
+import { tacoReceivedMessage, tacoSentMessage, tacoPartialSuccessMessage, tacoReceivedReactionMessage } from "../blocks/messages.js";
 import { updateTacoLimit } from "../utils/update-taco-limit.js";
 import { sendDM } from "./send-dm.js";
 
-export async function sendTacos(client, user, tacoStorage, userLimitsStorage, allowedTacos, forbiddenTacos, allowedTacoCount, forbiddenTacoCount, messageText) {
+export async function sendTacos(client, user, tacoStorage, userLimitsStorage, allowedTacos, forbiddenTacos, allowedTacoCount, forbiddenTacoCount, messageText, isReaction) {
     if (allowedTacos.length === 0) return;
 
     // Update taco count
@@ -19,8 +19,15 @@ export async function sendTacos(client, user, tacoStorage, userLimitsStorage, al
 
     // Send recipient(s) a DM
     for (const recipient of Object.keys(allowedTacoCount)) {
-        const { text, blocks } = tacoReceivedMessage(user, allowedTacoCount[recipient], messageText);
-        await sendDM(client, recipient, text, blocks);
+        if (isReaction) {
+            // Send recipient a DM — Reaction Success
+            const { text, blocks } = tacoReceivedReactionMessage(user, messageText);
+            await sendDM(client, recipient, text, blocks);
+        } else {
+            // Send recipient a DM — Taco Success
+            const { text, blocks } = tacoReceivedMessage(user, allowedTacoCount[recipient], messageText);
+            await sendDM(client, recipient, text, blocks);
+        }
     }
 
     if (forbiddenTacos.length === 0) {
